@@ -1,5 +1,5 @@
 const control = {}
-const { addPost, showPost } = require('../consultas/consulta.js')
+const { addPost, showPost, updateLikes, deletePost } = require('../consultas/consulta.js')
 
 control.index = () => {
   res.sendFile(__dirname, '../index.html');
@@ -16,5 +16,24 @@ control.post = async (req, res) => {
   res.json(posts);
 };
 
+control.put = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const posts = await updateLikes(id);
+    res.status(200).json(posts);
+  } catch (err) {
+    res.status(500);
+  }
+};
+
+control.delete = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await deletePost(id);
+    res.send(`Post ${req.params.id} eliminado`);
+  } catch (error) {
+    res.status(500).send(`Reintenta eliminar POST:${req.params.id}`);
+  }
+};
 
 module.exports = control;
